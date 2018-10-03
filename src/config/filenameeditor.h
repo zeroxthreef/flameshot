@@ -36,6 +36,7 @@ private:
     QLineEdit *m_outputLabel;
     QLineEdit *m_nameEditor;
     QLineEdit *m_passEditor;
+    QLineEdit *m_urlEditor;
     FileNameHandler *m_nameHandler;
     StrftimeChooserWidget *m_helperButtons;
     QPushButton *m_saveButton;

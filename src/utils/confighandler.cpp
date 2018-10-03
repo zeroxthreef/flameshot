@@ -216,6 +216,14 @@ void ConfigHandler::setPasskeyPattern(const QString &pattern) {
     return m_settings.setValue("passkey_ssul", pattern);
 }
 
+QString ConfigHandler::URLPatternValue() {
+    return m_settings.value("url_ssul").toString();
+}
+
+void ConfigHandler::setURLPattern(const QString &pattern) {
+    return m_settings.setValue("url_ssul", pattern);
+}
+
 bool ConfigHandler::disabledTrayIconValue() {
     bool res = false;
     if (m_settings.contains("disabledTrayIcon")) {

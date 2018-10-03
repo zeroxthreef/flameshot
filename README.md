@@ -69,6 +69,12 @@
 
 ## Usage
 
+Configuring the uploader:
+
+Go to to the configuration option then the "Filename Editor" tab, then at the bottom, set the 2 fields to what you choose
+
+![image](img/preview/usageConfig.png)
+
 Example commands:
 
 - Capture with GUI:

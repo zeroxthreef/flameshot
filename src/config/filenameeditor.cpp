@@ -41,6 +41,13 @@ void FileNameEditor::initLayout() {
     m_layout->addWidget(new QLabel(tr("Preview:")));
     m_layout->addWidget(m_outputLabel);
 
+    QLabel *ssul_seperator = new QLabel("SShotUL Settings");
+    ssul_seperator->setAlignment(Qt::AlignCenter);
+    m_layout->addWidget(ssul_seperator);
+
+    m_layout->addWidget(new QLabel(tr("SShotUL URL:")));
+    m_layout->addWidget(m_urlEditor);
+
     m_layout->addWidget(new QLabel(tr("SShotUL Passkey:")));
     m_layout->addWidget(m_passEditor);
 
@@ -58,7 +65,11 @@ void FileNameEditor::initWidgets() {
     m_nameEditor = new QLineEdit(this);
     m_nameEditor->setMaxLength(FileNameHandler::MAX_CHARACTERS);
 
-    // editor
+    // sshotul
+
+    m_urlEditor = new QLineEdit(this);
+    m_urlEditor->setMaxLength(FileNameHandler::MAX_CHARACTERS);
+
     m_passEditor = new QLineEdit(this);
     m_passEditor->setMaxLength(FileNameHandler::MAX_CHARACTERS);
 
@@ -100,6 +111,7 @@ void FileNameEditor::initWidgets() {
     connect(m_clearButton, &QPushButton::clicked, this,
             [this](){ m_nameEditor->setText(QString());
               m_passEditor->setText(QString());
+              m_urlEditor->setText(QString());
     });
     m_clearButton->setToolTip(tr("Deletes the name"));}
 
@@ -109,6 +121,8 @@ void FileNameEditor::savePattern() {
 
     pattern = m_passEditor->text();
     m_nameHandler->setPasskey(pattern);
+
+    ConfigHandler().setURLPattern(m_urlEditor->text());
 }
 
 void FileNameEditor::showParsedPattern(const QString &p) {
@@ -120,6 +134,8 @@ void FileNameEditor::resetName() {
     m_nameEditor->setText(ConfigHandler().filenamePatternValue());
 
     m_passEditor->setText(ConfigHandler().passkeyPatternValue());
+
+    m_urlEditor->setText(ConfigHandler().URLPatternValue());
 }
 
 void FileNameEditor::addToNameEditor(QString s) {
@@ -132,6 +148,8 @@ void FileNameEditor::updateComponents() {
     m_outputLabel->setText(m_nameHandler->parsedPattern());
 
     m_passEditor->setText(ConfigHandler().passkeyPatternValue());
+
+    m_urlEditor->setText(ConfigHandler().URLPatternValue());
 }
 
 //passkey

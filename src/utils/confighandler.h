@@ -55,6 +55,9 @@ public:
     QString passkeyPatternValue();
     void setPasskeyPattern(const QString &);
 
+    QString URLPatternValue();
+    void setURLPattern(const QString &);
+
     bool disabledTrayIconValue();
     void setDisabledTrayIcon(const bool);
 

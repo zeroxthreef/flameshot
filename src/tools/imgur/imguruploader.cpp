@@ -83,7 +83,7 @@ void ImgurUploader::handleReply(QNetworkReply *reply) {
     } else {
         m_infoLabel->setText(reply->errorString());
 
-        QTextStream(stdout) << "heyoo " << reply->readAll() << endl;
+        //QTextStream(stdout) << "heyoo " << reply->readAll() << endl;
     }
     new QShortcut(Qt::Key_Escape, this, SLOT(close()));
 }
@@ -103,7 +103,7 @@ void ImgurUploader::startDrag() {
 void ImgurUploader::upload() {
     QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 
-    QNetworkReply *reply;
+    //QNetworkReply *reply;
 
     QHttpPart imagePart;
     imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"data\"; filename=\"image.png\""));
@@ -132,7 +132,7 @@ void ImgurUploader::upload() {
     urlQuery.addQueryItem("description", description);
     */
 
-    QUrl url("https://ssul.vertesine.com/upload");
+    QUrl url(QString(ConfigHandler().URLPatternValue()).toUtf8());
     //QUrl url("http://localhost:9005/upload");
     //url.setQuery(urlQuery);
     QNetworkRequest request(url);
@@ -141,7 +141,7 @@ void ImgurUploader::upload() {
     request.setRawHeader("Authorization", QString(ConfigHandler().passkeyPatternValue()).toUtf8());
     request.setRawHeader("Content-Type", "multipart/form-data; boundary=" + multiPart->boundary());
 
-    QTextStream(stdout) << "hey " << QString(ConfigHandler().passkeyPatternValue()).toUtf8() << endl;
+    //QTextStream(stdout) << "hey " << QString(ConfigHandler().passkeyPatternValue()).toUtf8() << endl;
 
     /*reply = */m_NetworkAM->post(request, multiPart);
     //multiPart->setParent(reply);
