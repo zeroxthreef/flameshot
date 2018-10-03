@@ -35,6 +35,7 @@ private:
     QVBoxLayout *m_layout;
     QLineEdit *m_outputLabel;
     QLineEdit *m_nameEditor;
+    QLineEdit *m_passEditor;
     FileNameHandler *m_nameHandler;
     StrftimeChooserWidget *m_helperButtons;
     QPushButton *m_saveButton;
@@ -52,4 +53,8 @@ private slots:
     void savePattern();
     void showParsedPattern(const QString &);
     void resetName();
+
+    //passkey
+
+    void showParsedPatternPass(const QString &);
 };

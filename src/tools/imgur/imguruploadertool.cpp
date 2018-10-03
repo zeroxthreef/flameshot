@@ -40,7 +40,7 @@ QString ImgurUploaderTool::nameID() {
 }
 
 QString ImgurUploaderTool::description() const {
-    return tr("Uploads the selection to Imgur");
+    return tr("Uploads the selection to Vertesine SShotUL");
 }
 
 QWidget* ImgurUploaderTool::widget() {

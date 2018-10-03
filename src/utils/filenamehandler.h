@@ -35,6 +35,7 @@ public:
 
 public slots:
     void setPattern(const QString &pattern);
+    void setPasskey(const QString &pattern);
 
 private:
     //using charArr = char[MAX_CHARACTERS];

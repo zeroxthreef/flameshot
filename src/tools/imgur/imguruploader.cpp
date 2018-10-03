@@ -40,11 +40,13 @@
 #include <QTimer>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QHttpMultiPart>
+#include <QDebug>
 
 ImgurUploader::ImgurUploader(const QPixmap &capture, QWidget *parent) :
     QWidget(parent), m_pixmap(capture)
 {
-    setWindowTitle(tr("Upload to Imgur"));
+    setWindowTitle(tr("Upload to SShotUL"));
 
     m_spinner = new LoadSpinner(this);
     m_spinner->setColor(ConfigHandler().uiMainColorValue());
@@ -70,15 +72,18 @@ ImgurUploader::ImgurUploader(const QPixmap &capture, QWidget *parent) :
 void ImgurUploader::handleReply(QNetworkReply *reply) {
     m_spinner->deleteLater();
     if (reply->error() == QNetworkReply::NoError) {
+      /*
         QJsonDocument response = QJsonDocument::fromJson(reply->readAll());
         QJsonObject json = response.object();
         QJsonObject data = json["data"].toObject();
-        m_imageURL.setUrl(data["link"].toString());
-        m_deleteImageURL.setUrl(QString("https://imgur.com/delete/%1").arg(
-                                    data["deletehash"].toString()));
+        */
+        m_imageURL.setUrl(reply->readAll());
+        m_deleteImageURL.setUrl(reply->readAll());
         onUploadOk();
     } else {
         m_infoLabel->setText(reply->errorString());
+
+        QTextStream(stdout) << "heyoo " << reply->readAll() << endl;
     }
     new QShortcut(Qt::Key_Escape, this, SLOT(close()));
 }
@@ -96,23 +101,50 @@ void ImgurUploader::startDrag() {
 }
 
 void ImgurUploader::upload() {
+    QHttpMultiPart *multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
+
+    QNetworkReply *reply;
+
+    QHttpPart imagePart;
+    imagePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"data\"; filename=\"image.png\""));
+    //imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("application/octet-stream"));
+    imagePart.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("image/png"));
+
+    //QHttpPart textPart;
+    //textPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"data\""));
+    //textPart.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
+    //textPart.setBody("data");
+
     QByteArray byteArray;
     QBuffer buffer(&byteArray);
     m_pixmap.save(&buffer, "PNG");
 
+    imagePart.setBody(byteArray);
+
+    //multiPart->setBoundary("45763475623457623495763495873465987687678649872647");
+    multiPart->append(imagePart);
+    //multiPart->append(textPart);
+
+    /*
     QUrlQuery urlQuery;
     urlQuery.addQueryItem("title", "flameshot_screenshot");
     QString description = FileNameHandler().parsedPattern();
     urlQuery.addQueryItem("description", description);
+    */
 
-    QUrl url("https://api.imgur.com/3/image");
-    url.setQuery(urlQuery);
+    QUrl url("https://ssul.vertesine.com/upload");
+    //QUrl url("http://localhost:9005/upload");
+    //url.setQuery(urlQuery);
     QNetworkRequest request(url);
-    request.setHeader(QNetworkRequest::ContentTypeHeader,
-                      "application/application/x-www-form-urlencoded");
-    request.setRawHeader("Authorization", QString("Client-ID %1").arg(IMGUR_CLIENT_ID).toUtf8());
+    //request.setHeader(QNetworkRequest::ContentTypeHeader,
+                      //"multipart/form-data");
+    request.setRawHeader("Authorization", QString(ConfigHandler().passkeyPatternValue()).toUtf8());
+    request.setRawHeader("Content-Type", "multipart/form-data; boundary=" + multiPart->boundary());
 
-    m_NetworkAM->post(request, byteArray);
+    QTextStream(stdout) << "hey " << QString(ConfigHandler().passkeyPatternValue()).toUtf8() << endl;
+
+    /*reply = */m_NetworkAM->post(request, multiPart);
+    //multiPart->setParent(reply);
 }
 
 void ImgurUploader::onUploadOk() {

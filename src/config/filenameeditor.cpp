@@ -27,7 +27,7 @@
 
 FileNameEditor::FileNameEditor(QWidget *parent) : QWidget(parent) {
     initWidgets();
-    initLayout();    
+    initLayout();
 }
 
 void FileNameEditor::initLayout() {
@@ -40,6 +40,9 @@ void FileNameEditor::initLayout() {
     m_layout->addWidget(m_nameEditor);
     m_layout->addWidget(new QLabel(tr("Preview:")));
     m_layout->addWidget(m_outputLabel);
+
+    m_layout->addWidget(new QLabel(tr("SShotUL Passkey:")));
+    m_layout->addWidget(m_passEditor);
 
     QHBoxLayout *horizLayout = new QHBoxLayout();
     horizLayout->addWidget(m_saveButton);
@@ -55,6 +58,10 @@ void FileNameEditor::initWidgets() {
     m_nameEditor = new QLineEdit(this);
     m_nameEditor->setMaxLength(FileNameHandler::MAX_CHARACTERS);
 
+    // editor
+    m_passEditor = new QLineEdit(this);
+    m_passEditor->setMaxLength(FileNameHandler::MAX_CHARACTERS);
+
     // preview
     m_outputLabel = new QLineEdit(this);
     m_outputLabel->setDisabled(true);
@@ -67,6 +74,11 @@ void FileNameEditor::initWidgets() {
 
     connect(m_nameEditor, &QLineEdit::textChanged, this,
             &FileNameEditor::showParsedPattern);
+
+    //for the passkey
+
+    //connect(m_passEditor, &QLineEdit::textChanged, this,
+    //        &FileNameEditor::showParsedPatternPass);
     updateComponents();
 
     // helper buttons
@@ -87,12 +99,16 @@ void FileNameEditor::initWidgets() {
     m_clearButton = new QPushButton(tr("Clear"), this);
     connect(m_clearButton, &QPushButton::clicked, this,
             [this](){ m_nameEditor->setText(QString());
+              m_passEditor->setText(QString());
     });
     m_clearButton->setToolTip(tr("Deletes the name"));}
 
 void FileNameEditor::savePattern() {
     QString pattern = m_nameEditor->text();
     m_nameHandler->setPattern(pattern);
+
+    pattern = m_passEditor->text();
+    m_nameHandler->setPasskey(pattern);
 }
 
 void FileNameEditor::showParsedPattern(const QString &p) {
@@ -102,6 +118,8 @@ void FileNameEditor::showParsedPattern(const QString &p) {
 
 void FileNameEditor::resetName() {
     m_nameEditor->setText(ConfigHandler().filenamePatternValue());
+
+    m_passEditor->setText(ConfigHandler().passkeyPatternValue());
 }
 
 void FileNameEditor::addToNameEditor(QString s) {
@@ -112,4 +130,13 @@ void FileNameEditor::addToNameEditor(QString s) {
 void FileNameEditor::updateComponents() {
     m_nameEditor->setText(ConfigHandler().filenamePatternValue());
     m_outputLabel->setText(m_nameHandler->parsedPattern());
+
+    m_passEditor->setText(ConfigHandler().passkeyPatternValue());
+}
+
+//passkey
+
+void FileNameEditor::showParsedPatternPass(const QString &p) {
+    QString output = m_nameHandler->parseFilename(p);
+    m_outputLabel->setText(output);
 }

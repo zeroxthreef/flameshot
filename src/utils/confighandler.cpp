@@ -206,6 +206,16 @@ void ConfigHandler::setFilenamePattern(const QString &pattern) {
     return m_settings.setValue("filenamePattern", pattern);
 }
 
+//sshotul
+
+QString ConfigHandler::passkeyPatternValue() {
+    return m_settings.value("passkey_ssul").toString();
+}
+
+void ConfigHandler::setPasskeyPattern(const QString &pattern) {
+    return m_settings.setValue("passkey_ssul", pattern);
+}
+
 bool ConfigHandler::disabledTrayIconValue() {
     bool res = false;
     if (m_settings.contains("disabledTrayIcon")) {

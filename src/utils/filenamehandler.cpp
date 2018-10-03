@@ -60,6 +60,10 @@ void FileNameHandler::setPattern(const QString &pattern) {
     ConfigHandler().setFilenamePattern(pattern);
 }
 
+void FileNameHandler::setPasskey(const QString &pattern) {
+    ConfigHandler().setPasskeyPattern(pattern);
+}
+
 QString FileNameHandler::absoluteSavePath(QString &directory, QString &filename) {
     ConfigHandler config;
     directory = config.savePathValue();

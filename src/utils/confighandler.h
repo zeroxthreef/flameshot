@@ -52,6 +52,9 @@ public:
     QString filenamePatternValue();
     void setFilenamePattern(const QString &);
 
+    QString passkeyPatternValue();
+    void setPasskeyPattern(const QString &);
+
     bool disabledTrayIconValue();
     void setDisabledTrayIcon(const bool);
 
